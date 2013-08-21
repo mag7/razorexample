@@ -1,0 +1,50 @@
+﻿@using BLL;
+@{
+    DogsVM model = null;
+    try
+    {
+        model = new DogViewLogic().GetDogsVM();
+    }
+    catch (Exception e)
+    {
+        Response.Redirect("~/error.cshtml");
+    }
+    Page.Title = "DogHouse";
+    Layout = "_Layout.cshtml";
+}
+
+
+<div>
+    <button type="button" onclick="window.location.href='/RazorExample/create.cshtml'">
+        Create
+    </button>
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Breed</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (ViewDogVM dog in model.Dogs)
+            {
+                <tr>
+                    <td>@dog.Id</td>
+                    <td>@dog.Name</td>
+                    <td>@dog.Age</td>
+                    <td>@dog.Breed</td>
+                    <td>
+                        <a href="edit.cshtml?dogId=@dog.Id">Edit</a>
+                    </td>
+                    <td>
+                        <a href="delete.cshtml?dogId=@dog.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

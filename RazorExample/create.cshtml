@@ -1,0 +1,58 @@
+﻿@using BLL;
+@{
+    Page.Title = "Create A Dog";
+    Layout = "_Layout.cshtml";
+    CreateDogLogic logic = new CreateDogLogic();
+    CreateDogVM model = null;
+    if (IsPost)
+    {
+        try
+        {
+            DogFM dog = new DogFM();
+            dog.Age = Convert.ToInt32(Request["age"]);
+            dog.BreedId = Convert.ToInt32(Request["breed"]);
+            dog.Name = Request["name"];
+            logic.SaveNewDog(dog);
+        }
+        catch (Exception e)
+        {
+            Response.Redirect("~/error.cshtml");
+        }
+        Response.Redirect("~/");
+    }
+    else
+    {
+        try
+        {
+            model = logic.GetCreateDogVM();
+        }
+        catch (Exception e)
+        {
+            Response.Redirect("~/error.cshtml");
+        }
+    }
+}
+
+
+<div>
+    <form action="create" method="post">
+        <div>
+            <label>Name:</label>
+            <input type="text" name="name" />
+        </div>
+        <div>
+            <label>Age</label>
+            <input type="text" title="Age of the dog" pattern="[0-9]{1,2}" name="age" />
+        </div>
+        <div>
+            <label>Breed</label>
+            <select name="breed">
+                @foreach (BreedVM breed in model.Breeds)
+                {
+                    <option value="@breed.Id">@breed.Type</option>
+                }
+            </select>
+        </div>
+        <input type="submit" value="Create" />
+    </form>
+</div>

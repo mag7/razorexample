@@ -1,0 +1,62 @@
+﻿@using BLL;
+@{
+    Page.Title = "Title goes here";
+    Layout = "_Layout.cshtml";
+    CreateDogLogic logic = new CreateDogLogic();
+    EditDogVM vm = null;
+    int dogId = 0;
+    if (IsPost)
+    {
+        try
+        {
+            DogFM dog = new DogFM();
+            dog.Id = Convert.ToInt32(Request["id"]);
+            dog.Age = Convert.ToInt32(Request["age"]);
+            dog.BreedId = Convert.ToInt32(Request["breed"]);
+            dog.Name = Request["name"];
+            logic.UpdateDog(dog);
+        }
+        catch (Exception e)
+        {
+            Response.Redirect("~/error.cshtml");
+        }
+        Response.Redirect("~/");
+    }
+    else
+    {
+        try
+        {
+            dogId = Convert.ToInt32(Request.QueryString["dogId"]);
+            vm = logic.GetEditDogVM(dogId);
+        }
+        catch(Exception e)
+        {
+            Response.Redirect("~/error.cshtml");
+        }
+    }
+}
+
+
+<div>
+    <form action="edit" method="post">
+        <input type="hidden" value="@dogId" name="id" />
+        <div>
+            <label>Name:</label>
+            <input type="text" name="name" value="@vm.Dog.Name" />
+        </div>
+        <div>
+            <label>Age</label>
+            <input type="text" title="Age of the dog" pattern="[0-9]{1,2}" name="age" value="@vm.Dog.Age" />
+        </div>
+        <div>
+            <label>Breed</label>
+            <select name="breed">
+                @foreach (BreedVM breed in vm.Breeds)
+                {
+                    <option value="@breed.Id" @(breed.Id == vm.Breed.Id ? "selected" : "")>@breed.Type</option>
+                }
+            </select>
+        </div>
+        <input type="submit" value="Update" />
+    </form>
+</div>

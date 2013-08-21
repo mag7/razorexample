@@ -1,0 +1,14 @@
+﻿@using BLL;
+@{
+    Page.Title = "Delete";
+    try
+    {
+        int id = Convert.ToInt32(Request.QueryString["dogId"]);
+        new DogViewLogic().DeleteDog(id);
+    }
+    catch(Exception e)
+    {
+        Response.Redirect("~/error.cshtml");
+    }
+    Response.Redirect("~/");
+}
